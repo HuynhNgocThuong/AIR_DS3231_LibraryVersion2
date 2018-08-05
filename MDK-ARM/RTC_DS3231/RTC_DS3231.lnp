@@ -1,0 +1,25 @@
+--cpu Cortex-M3
+"rtc_ds3231\startup_stm32f103xb.o"
+"rtc_ds3231\stm32f1xx_hal_tim.o"
+"rtc_ds3231\stm32f1xx_hal_cortex.o"
+"rtc_ds3231\stm32f1xx_hal_flash.o"
+"rtc_ds3231\stm32f1xx_hal_gpio.o"
+"rtc_ds3231\stm32f1xx_hal_pwr.o"
+"rtc_ds3231\stm32f1xx_hal_gpio_ex.o"
+"rtc_ds3231\stm32f1xx_hal_tim_ex.o"
+"rtc_ds3231\stm32f1xx_hal.o"
+"rtc_ds3231\stm32f1xx_hal_flash_ex.o"
+"rtc_ds3231\stm32f1xx_hal_rcc.o"
+"rtc_ds3231\stm32f1xx_hal_uart.o"
+"rtc_ds3231\stm32f1xx_hal_rcc_ex.o"
+"rtc_ds3231\stm32f1xx_hal_i2c.o"
+"rtc_ds3231\stm32f1xx_hal_dma.o"
+"rtc_ds3231\system_stm32f1xx.o"
+"rtc_ds3231\main.o"
+"rtc_ds3231\stm32f1xx_it.o"
+"rtc_ds3231\stm32f1xx_hal_msp.o"
+"rtc_ds3231\rtc.o"
+--library_type=microlib --strict --scatter "RTC_DS3231\RTC_DS3231.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "RTC_DS3231.map" -o RTC_DS3231\RTC_DS3231.axf
