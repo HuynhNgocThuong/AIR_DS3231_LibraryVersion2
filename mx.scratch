@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\Thuong\Desktop\RTC_DS3231\\RTC_DS3231</ProjectName>
+<ProjectName>C:\Users\Thuong\Documents\Keil C5\Air_V2\AIR_DS3231_LibraryVersion2\\RTC_DS3231</ProjectName>
 <ProjectNature>C</ProjectNature> 
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\Thuong\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.1\Drivers\CMSIS</HAL_Driver>
@@ -35,7 +35,7 @@
     <usedDebug>true</usedDebug>
     	<debugprobe>swd</debugprobe>
     <optimization></optimization>
-    <icfloc>1</icfloc>
+    <icfloc>0</icfloc>
     <Adefines>
         <define></define>
     </Adefines>   

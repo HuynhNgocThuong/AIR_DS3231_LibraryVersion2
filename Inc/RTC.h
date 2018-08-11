@@ -24,7 +24,7 @@
 #define DS3231_REG_STATUS           (0x0F)
 #define DS3231_REG_TEMPERATURE      (0x11)
 
-typedef struct {
+typedef __packed struct {
 		uint8_t sec;
 		uint8_t min;
 		uint8_t hour;

@@ -39,13 +39,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_hal.h"
-#include <stdbool.h>
+#include "string.h"
 /* USER CODE BEGIN Includes */
 #include "RTC.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
+
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
@@ -60,7 +61,6 @@ uint8_t control = 0;
 uint8_t status = 0;
 float temperature = 0;
 /* USER CODE END PV */
-
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -73,7 +73,11 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+    if (GPIO_Pin==GPIO_PIN_0){
+			printf("Wakeup\r\n");
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -108,27 +112,38 @@ int main(void)
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+	
 	RTC_SetTime(23,57,30,2,8,18);
 	RTC_SetAlarm1(0,23,58,0,DS3231_MATCH_H_M_S,true);
 	RTC_GetControl();
 	HAL_Delay(5000);
-	//I2C_WriteByte(hi2c1,(uint16_t)0xD0,0x0E, RTC_DEC2BCD(5));
+	printf("Enter sleepmode\r\n");
+	//Enter sleep mode
+	__HAL_RCC_PWR_CLK_ENABLE();
+	
+	HAL_SuspendTick();
+	
+	HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	
+	HAL_ResumeTick();
+	
+	printf("Out sleepmode\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	RTC_GetTime();
-	printf(" %d-%d-%d", DS3231.date, DS3231.month, DS3231.year);
-	printf(" %d:%d:%d\r\n", DS3231.hour, DS3231.min, DS3231.sec);		
-	RTC_GetAlarm1();	
-	check = RTC_GetControl();
-	if(check.status == 1){	
-	RTC_SetAlarm1(0,23,59,0,DS3231_MATCH_H_M_S,true);
-}
-	temperature = RTC_readTemperature();
-	printf("Nhiet do: %0.2f\r\n",temperature);
+//	RTC_GetTime();
+//	printf(" %d-%d-%d", DS3231.date, DS3231.month, DS3231.year);
+//	printf(" %d:%d:%d\r\n", DS3231.hour, DS3231.min, DS3231.sec);		
+//	RTC_GetAlarm1();	
+//	check = RTC_GetControl();
+//	if(check.status == 1){	
+//	RTC_SetAlarm1(0,23,59,0,DS3231_MATCH_H_M_S,true);
+//	}
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);	
 	HAL_Delay(1000);
 
   /* USER CODE END WHILE */
@@ -239,14 +254,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PA0 */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 }
 
